@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 14:41:53 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:26:43 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,29 @@ static bool	is_space(char c)
 
 const char	*valide_input(const char *str)
 {
-    int		len;
-    const char	*nbr;
+	int			len;
+	const char	*nbr;
 
-    len = 0;
-    while (is_space(*str))
-        ++str;
-    if (*str == '+')
-        ++str;
-    else if (*str == '-')
-        error_exit("Negative values are not allowed");
-    if (!is_digit(*str))
-        error_exit("Invalid input");
-    nbr = str;
-    while (is_digit(*str))
-    {
-        ++str;
-        ++len;
-    }
-    if (len > 10)
-        error_exit("Number is too big");
-    if (*str != '\0')
-        error_exit("Invalid input");
-    return (nbr);
+	len = 0;
+	while (is_space(*str))
+		++str;
+	if (*str == '+')
+		++str;
+	else if (*str == '-')
+		error_exit("Negative values are not allowed");
+	if (!is_digit(*str))
+		error_exit("Invalid input");
+	nbr = str;
+	while (is_digit(*str))
+	{
+		++str;
+		++len;
+	}
+	if (len > 10)
+		error_exit("Number is too big");
+	if (*str != '\0')
+		error_exit("Invalid input");
+	return (nbr);
 }
 
 static long	ft_atol(const char *str)
@@ -68,9 +68,12 @@ static long	ft_atol(const char *str)
 void	parse_input(t_data *data, char **argv)
 {
 	data->philo_nbr = ft_atol(argv[1]);
-	data->time_to_die = ft_atol(argv[2]);
-	data->time_to_eat = ft_atol(argv[3]);
-	data->time_to_sleep = ft_atol(argv[4]);
+	data->time_to_die = ft_atol(argv[2]) * 1e3;
+	data->time_to_eat = ft_atol(argv[3]) * 1e3;
+	data->time_to_sleep = ft_atol(argv[4]) * 1e3;
+	if (data->time_to_die < 6e4 || data->time_to_eat < 6e4
+		|| data->time_to_sleep < 6e4)
+		error_exit("Use timestamps more than 60ms");
 	if (argv[5])
 		data->limit_eat = ft_atol(argv[5]);
 	else

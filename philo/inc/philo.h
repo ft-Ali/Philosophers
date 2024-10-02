@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 14:29:47 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:58:22 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,17 @@
 
 typedef pthread_mutex_t	t_mtx;
 typedef struct s_data	t_data;
+
+typedef enum e_mutex
+{
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH,
+}						t_emutex;
 
 typedef struct s_fork
 {
@@ -69,10 +80,14 @@ struct					s_data
 
 /************** UTILS ****************/
 
-void					error_exit(char *msg);
+int						error_exit(char *msg);
+void					*protect_malloc(size_t size);
+
+/************** PROCTECTED ****************/
+void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
+void					*protect_malloc(size_t size);
 
 /************** PARSE ****************/
 void					parse_input(t_data *data, char **argv);
-
 
 #endif
