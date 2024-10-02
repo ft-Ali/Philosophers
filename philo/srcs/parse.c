@@ -6,12 +6,11 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 14:36:01 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:41:53 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
-#include <ctype.h>
 
 static bool	is_digit(char c)
 {
