@@ -4,7 +4,7 @@ CC			=	cc
 
 FLAG		=	-Wall -Wextra -Werror -g3
 
-C_FILE		= srcs/philo.c srcs/utils.c
+C_FILE		= srcs/philo.c srcs/utils.c srcs/parse.c 
 
 
 OBJS		=	$(C_FILE:.c=.o)
