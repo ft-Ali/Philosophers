@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 17:02:35 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:10:15 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ struct					s_data
 	int limit_eat;      // optional [5]
 	int timestamp;      // timestamp when the program started
 	bool end_timestamp; // if philo died or all philo ate
+	bool thread_ready;  // if all threads are ready
+	t_mtx				data_mtx; // avoid data race
 	t_fork				*forks;
 	t_philo				*philo;
 };
@@ -83,7 +85,7 @@ struct					s_data
 int						error_exit(char *msg);
 void					*protect_malloc(size_t size);
 void					free_data(t_data *data);
-
+void					check_fork(t_philo *philo, int philo_nbr);
 /************** PROCTECTED ****************/
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
 void					*protect_malloc(size_t size);

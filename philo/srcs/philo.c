@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:40 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 17:08:07 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:15:43 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv)
 {
 	t_data data;
 	
+	
 	if (argc == 5 || argc == 6)
 	{
 		parse_input(&data, argv);
@@ -30,6 +31,7 @@ int	main(int argc, char **argv)
 		// start simulation
 		// start_simulation(&data);
 		// free data after simulation = philo full or philo has died
+		check_fork(data.philo, data.philo_nbr);
 		free_data(&data);
 	}
 	else

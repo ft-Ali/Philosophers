@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:33:29 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 17:21:33 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:11:12 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	init_data(t_data *data)
 
 	i = -1;
 	data->end_timestamp = false;
+	data->thread_ready = false;
+	protect_mutex_handle(&data->data_mtx, INIT);
 	data->philo = protect_malloc(sizeof(t_philo) * data->philo_nbr);
 	data->forks = protect_malloc(sizeof(t_fork) * data->philo_nbr);
 	while (++i < data->philo_nbr)
