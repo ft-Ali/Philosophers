@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:33:29 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/08 17:11:12 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:42:58 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	init_p(t_data *data)
 
 void	init_data(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	data->end_timestamp = false;

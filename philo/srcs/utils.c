@@ -6,30 +6,33 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/08 14:27:08 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:26:57 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	check_fork(t_philo *philo, int philo_nbr)
+long	gettime(t_etime_code code)
 {
-	int	i;
+	struct timeval	tv;
 
-	i = 0;
-	while (i < philo_nbr)
-	{
-		printf("Philosopher %d has %d forks\n", i, philo[i].left_fork->fork_id);
-		printf("\n");
-		printf("Philosopher %d has %d forks\n", i, philo[i].right_fork->fork_id);
-		i++;
-	}
+	if (gettimeofday(&tv, NULL))
+		return (error_exit("gettimeofday() failed"));
+	if (SECOND == code)
+		return (tv.tv_sec + (tv.tv_usec / 1e6));
+	else if (MILLISECOND == code)
+		return (tv.tv_sec * 1e3 + tv.tv_usec / 1e3);
+	else if (MICROSECOND == code)
+		return (tv.tv_sec * 1e6 + tv.tv_usec);
+	else 
+		return (error_exit("Invalid time code"));
+	return(42);
 }
 
 int	error_exit(char *msg)
 {
 	printf(RED "🚨 %s 🚨\n" RESET, msg);
-	return (0);
+	return (-1);
 }
 void	free_data(t_data *data)
 {
@@ -38,4 +41,27 @@ void	free_data(t_data *data)
 	if (data->forks)
 		free(data->forks);
 	// Ajoutez d'autres libérations de mémoire si nécessaire
+}
+
+void ft_usleep(int time, t_data *data)
+{
+	int start;
+	int elapsed;
+	int rem;
+
+	start = gettime(MICROSECOND);
+	while(gettime(MICROSECOND) - start < time)
+	{
+		if (simulation_end(data))
+			break ;
+		elapsed = gettime(MICROSECOND) - start;
+		rem = time - elapsed;
+		if(rem > 100)
+			usleep(time / 2);
+		else
+			{
+				while(gettime(MICROSECOND) - start < time)
+					;
+			}
+	}
 }

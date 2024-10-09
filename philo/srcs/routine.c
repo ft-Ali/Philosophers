@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/08 17:11:23 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:20:48 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,15 @@ void	*start_sim(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	wait_trhead(philo->data);
+	wait_trhead(p->data);
+	while (!simulation_end(p->data))
+	{
+		if(p->full)
+			break ;
+		eat(p);
+		sleep(p); // write status
+		think(p);	
+	}
 	return (NULL);
 }
 
@@ -29,12 +37,16 @@ void	*routine_start(t_data *data)
 	if (data->limit_eat == 0)
 		return ;
 	else if (data->limit_eat == 1)
-		// a faire
+		////// a faire
 	else
-		{
+	{
 			while (++i < data->philo_nbr)
 				protect_thread_handle(&data->philo[i].thread, start_sim,
 					&data->philo[i], CREATE);
-		}
-	
+	}
+	data->timestamp = gettime(MILLISECOND);
+	set_bool(&data->data_mtx, &data->thread_ready, true);
+	i = -1;
+	while (++i < data->philo_nbr)
+		protect_thread_handle(&data->philo[i].thread, NULL, NULL, JOIN);
 }
