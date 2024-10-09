@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 15:27:19 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:38:26 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,20 @@
 # define RESET "\033[0m"
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
+# define DEBUG 0
 
 typedef pthread_mutex_t	t_mtx;
 typedef struct s_data	t_data;
+
+typedef enum e_status
+{
+	EAT,
+	SLEEP,
+	THINK,
+	FORK_RIGHT,
+	FORK_LEFT,
+	DIED,
+}						t_estatus;
 
 typedef enum e_mutex
 {
@@ -83,6 +94,7 @@ struct					s_data
 	bool end_timestamp; // if philo died or all philo ate
 	bool thread_ready;  // if all threads are ready
 	t_mtx data_mtx;     // avoid data race
+	t_mtx print_mtx;    // print mutex
 	t_fork				*forks;
 	t_philo				*philo;
 };
@@ -95,6 +107,8 @@ void					free_data(t_data *data);
 void					wait_trhead(t_data *data);
 long					gettime(t_etime_code code);
 void					ft_usleep(int time, t_data *data);
+void					write_status(t_estatus status, t_philo *philo,
+							bool debug);
 
 /************** PROCTECTED ****************/
 

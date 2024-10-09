@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 15:20:48 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:38:34 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*start_sim(void *philo)
 		if(p->full)
 			break ;
 		eat(p);
-		sleep(p); // write status
+		write_status(SLEEP, p, DEBUG);
 		think(p);	
 	}
 	return (NULL);
