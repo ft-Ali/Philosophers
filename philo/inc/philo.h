@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 17:38:26 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/10 16:44:50 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ typedef struct s_philo
 	t_fork				*right_fork;
 	int					eat_count;
 	bool				full;
-	long last_eat;    // last time the philo ate
+	int last_eat; // last time the philo ate
+	t_mtx				philo_mtx;
 	pthread_t thread; // thread of the philo
 	t_data				*data;
 }						t_philo;
@@ -109,14 +110,15 @@ long					gettime(t_etime_code code);
 void					ft_usleep(int time, t_data *data);
 void					write_status(t_estatus status, t_philo *philo,
 							bool debug);
+void					*start_sim(void *philo);
+void					set_int(t_mtx *mtx, int *dest, int value);
 
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
 void					*protect_malloc(size_t size);
 void					protect_thread_handle(pthread_t *thread,
-							t_emutex action, void *(*start_routine)(void *),
-							void *arg);
+							void *(*foo)(void *), void *data, t_emutex action);
 void					handle_thread_err(int err, t_emutex action);
 
 /************** PARSE ****************/
@@ -133,5 +135,6 @@ void					set_bool(t_mtx *mtx, bool *dest, bool value);
 bool					get_bool(t_mtx *mtx, bool *src);
 void					set_int(t_mtx *mtx, int *dest, int value);
 bool					simulation_end(t_data *data);
+void					*routine_start(t_data *data);
 
 #endif

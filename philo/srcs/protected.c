@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:46:28 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/02 17:07:25 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:46:42 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static void	handle_mtx_err(int err, t_emutex action)
 
 void	protect_mutex_handle(t_mtx *mutex, t_emutex action)
 {
+	if (mutex == NULL)
+		error_exit("Mutex pointer is NULL");
 	if (action == LOCK)
 		handle_mtx_err(pthread_mutex_lock(mutex), action);
 	else if (action == UNLOCK)
@@ -60,12 +62,11 @@ void	handle_thread_err(int err, t_emutex action)
 		error_exit("Thread detach failed");
 }
 
-void	protect_thread_handle(pthread_t *thread, t_emutex action,
-		void *(*start_routine)(void *), void *arg)
+void	protect_thread_handle(pthread_t *thread, void *(*foo)(void *),
+		void *data, t_emutex action)
 {
 	if (action == CREATE)
-		handle_thread_err(pthread_create(thread, NULL, start_routine, arg),
-			action);
+		handle_thread_err(pthread_create(thread, NULL, foo, data), action);
 	else if (action == JOIN)
 		handle_thread_err(pthread_join(*thread, NULL), action);
 	else if (action == DETACH)

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:40 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 14:41:36 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:51:58 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 		// init data && create philos
 		init_data(&data);
 		// start simulation
-		// start_simulation(&data);
+		routine_start(&data);
 		// free data after simulation = philo full or philo has died
 		free_data(&data);
 	}
