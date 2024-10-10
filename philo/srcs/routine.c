@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 23:44:05 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/11 00:42:05 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void	*routine_start(t_data *data)
 	int	i;
 
 	i = -1;
-	if (data->limit_eat == 0)
+	if (data->philo_nbr == 0)
 		return (NULL);
-	else if (data->limit_eat == 1)
+	else if (data->philo_nbr == 1)
 		protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0], CREATE);
 	else
 	{

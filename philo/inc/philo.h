@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 23:49:53 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/11 00:44:59 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,10 @@ typedef struct s_philo
 
 struct					s_data
 {
-	int					philo_nbr;
-	int					time_to_die;
-	int					time_to_eat;
-	int					time_to_sleep;
+	long					philo_nbr;
+	long					time_to_die;
+	long					time_to_eat;
+	long					time_to_sleep;
 	int limit_eat;      // optional [5]
 	int timestamp;      // timestamp when the program started
 	bool end_timestamp; // if philo died or all philo ate
@@ -118,7 +118,7 @@ void increase_int(t_mtx *mtx, int *dest);
 bool all_threads_ready(t_mtx *mtx, int *threads, int philo_nbr);
 void *solo_p(void *data);
 void *monitor(void *data);
-int get_int(t_mtx *mtx, int *src);
+long get_int(t_mtx *mtx, int *src);
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);

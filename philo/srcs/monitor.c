@@ -14,8 +14,8 @@
 
 static bool philo_died(t_philo *philo)
 {
-	int time;
-	int t_die;
+	long time;
+	long t_die;
 
 
 	if(get_bool(&philo->data->data_mtx, &philo->full))

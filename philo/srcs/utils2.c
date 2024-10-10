@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:49:45 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 23:31:28 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/11 00:45:18 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void write_status_debug(t_estatus status, t_philo *philo, int elapsed)
         printf(CYAN "%-6d" " %d is sleeping 💤\n" RESET, elapsed, philo->id);
     else if (THINK == status && !simulation_end(philo->data))
         printf(YELLOW "%-6d" " %d is thinking 🤔\n" RESET, elapsed, philo->id);
-    else if (DIED == status && !simulation_end(philo->data))
+    else if (DIED == status && simulation_end(philo->data))
         printf(RED "%-6d" "💀💀💀 %d died 💀💀💀\n" RESET, elapsed, philo->id);
 }
 
@@ -77,7 +77,7 @@ void	write_status(t_estatus status, t_philo *philo, bool debug)
 		else if (status == THINK && !simulation_end(philo->data))
 			printf(YELLOW "%-6d" RESET " %d is thinking\n", elapsed, philo->id);
 		else if (status == DIED && !simulation_end(philo->data))
-			printf(RED "%-6d" RESET " %d died\n", elapsed, philo->id);
+			printf(RED "%-6d" RESET " 💀💀💀 %d died\n", elapsed, philo->id);
 	}
 		protect_mutex_handle(&philo->data->print_mtx, UNLOCK);
 }
