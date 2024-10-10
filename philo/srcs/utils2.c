@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:49:45 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 16:45:10 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/10 23:31:28 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,26 @@ void	wait_trhead(t_data *data)
 	while (!get_bool(&data->data_mtx, &data->thread_ready))
 		;
 }
+
+void increase_int(t_mtx *mtx, int *dest)
+{
+	protect_mutex_handle(mtx, LOCK);
+	(*dest)++;
+	protect_mutex_handle(mtx, UNLOCK);
+}
+
+bool all_threads_ready(t_mtx *mtx, int *threads, int philo_nbr)
+{
+	bool ready;
+
+	ready = false;
+	protect_mutex_handle(mtx, LOCK);
+	if (*threads == philo_nbr)
+		ready = true;
+	protect_mutex_handle(mtx, UNLOCK);
+	return (ready);
+}
+
 
 static void write_status_debug(t_estatus status, t_philo *philo, int elapsed)
 {

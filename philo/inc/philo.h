@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 16:44:50 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/10 23:49:53 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define RESET "\033[0m"
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
-# define DEBUG 0
+# define DEBUG 1
 
 typedef pthread_mutex_t	t_mtx;
 typedef struct s_data	t_data;
@@ -95,6 +95,8 @@ struct					s_data
 	bool end_timestamp; // if philo died or all philo ate
 	bool thread_ready;  // if all threads are ready
 	t_mtx data_mtx;     // avoid data race
+	int thread_count;   // count of threads
+	pthread_t monitor;	  // monitor thread
 	t_mtx print_mtx;    // print mutex
 	t_fork				*forks;
 	t_philo				*philo;
@@ -112,7 +114,11 @@ void					write_status(t_estatus status, t_philo *philo,
 							bool debug);
 void					*start_sim(void *philo);
 void					set_int(t_mtx *mtx, int *dest, int value);
-
+void increase_int(t_mtx *mtx, int *dest);
+bool all_threads_ready(t_mtx *mtx, int *threads, int philo_nbr);
+void *solo_p(void *data);
+void *monitor(void *data);
+int get_int(t_mtx *mtx, int *src);
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
