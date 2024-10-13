@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 14:56:20 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 00:20:38 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ static long	ft_atol(const char *str)
 void	parse_input(t_data *data, char **argv)
 {
 	data->philo_nbr = ft_atol(argv[1]);
-	data->time_to_die = ft_atol(argv[2]) * 1e3;
-	data->time_to_eat = ft_atol(argv[3]) * 1e3;
-	data->time_to_sleep = ft_atol(argv[4]) * 1e3;
+	data->time_to_die = ft_atol(argv[2]) * 1000;
+	data->time_to_eat = ft_atol(argv[3]) * 1000;
+	data->time_to_sleep = ft_atol(argv[4]) * 1000;
 	if (data->time_to_die < 6e4 || data->time_to_eat < 6e4
 		|| data->time_to_sleep < 6e4)
 		error_exit("Use timestamps more than 60ms");

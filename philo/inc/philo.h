@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/11 00:44:59 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 00:57:16 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define GREEN "\033[0;32m"
 # define RED "\033[1;31m"
 # define GREY "\033[0;90m"
 # define CYAN "\033[1;96m"
+# define GREEN "\033[1;32m"
 # define RESET "\033[0m"
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
-# define DEBUG 1
+# define DEBUG 0
 
-typedef pthread_mutex_t	t_mtx;
 typedef struct s_data	t_data;
+typedef pthread_mutex_t	t_mtx;
 
 typedef enum e_status
 {
@@ -72,9 +72,9 @@ typedef struct s_philo
 	int					id;
 	t_fork				*left_fork;
 	t_fork				*right_fork;
-	int					eat_count;
+	long				eat_count;
 	bool				full;
-	int last_eat; // last time the philo ate
+	long last_eat; // last time the philo ate
 	t_mtx				philo_mtx;
 	pthread_t thread; // thread of the philo
 	t_data				*data;
@@ -90,12 +90,12 @@ struct					s_data
 	long					time_to_die;
 	long					time_to_eat;
 	long					time_to_sleep;
-	int limit_eat;      // optional [5]
-	int timestamp;      // timestamp when the program started
+	long limit_eat;      // optional [5]
+	long timestamp;      // timestamp when the program started
 	bool end_timestamp; // if philo died or all philo ate
 	bool thread_ready;  // if all threads are ready
 	t_mtx data_mtx;     // avoid data race
-	int thread_count;   // count of threads
+	long thread_count;   // count of threads
 	pthread_t monitor;	  // monitor thread
 	t_mtx print_mtx;    // print mutex
 	t_fork				*forks;
@@ -105,6 +105,7 @@ struct					s_data
 /************** UTILS ****************/
 
 int						error_exit(char *msg);
+void	think(t_philo *philo, bool presim);
 void					*protect_malloc(size_t size);
 void					free_data(t_data *data);
 void					wait_trhead(t_data *data);
@@ -113,12 +114,12 @@ void					ft_usleep(int time, t_data *data);
 void					write_status(t_estatus status, t_philo *philo,
 							bool debug);
 void					*start_sim(void *philo);
-void					set_int(t_mtx *mtx, int *dest, int value);
-void increase_int(t_mtx *mtx, int *dest);
-bool all_threads_ready(t_mtx *mtx, int *threads, int philo_nbr);
+void	set_int(t_mtx *mtx, long *dest, long value);
+void increase_int(t_mtx *mtx, long *dest);
+bool all_threads_ready(t_mtx *mtx, long *threads, long philo_nbr);
 void *solo_p(void *data);
 void *monitor(void *data);
-long get_int(t_mtx *mtx, int *src);
+long get_int(t_mtx *mtx, long *src);
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
@@ -139,7 +140,6 @@ void					init_data(t_data *data);
 
 void					set_bool(t_mtx *mtx, bool *dest, bool value);
 bool					get_bool(t_mtx *mtx, bool *src);
-void					set_int(t_mtx *mtx, int *dest, int value);
 bool					simulation_end(t_data *data);
 void					*routine_start(t_data *data);
 

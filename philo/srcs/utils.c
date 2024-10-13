@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/09 15:26:57 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 00:54:08 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,35 @@ int	error_exit(char *msg)
 }
 void	free_data(t_data *data)
 {
+	t_philo *philo;
+	int i;
+	 i = -1;
+	 while(++i < data->philo_nbr)
+	 {
+		 philo = data->philo + i;
+		 protect_mutex_handle(&philo->philo_mtx, DESTROY);
+	 }
+	 protect_mutex_handle(&data->data_mtx, DESTROY);
+	 protect_mutex_handle(&data->print_mtx, DESTROY);
 	if (data->philo)
 		free(data->philo);
 	if (data->forks)
 		free(data->forks);
 	// Ajoutez d'autres libérations de mémoire si nécessaire
+}
+
+void de_sync(t_philo *philo)
+{
+	if(philo->data->philo_nbr % 2 == 0)
+	{
+		if(philo->id % 2 == 0)
+			ft_usleep(3e4, philo->data);
+	}
+	else
+	{
+		if(philo->id % 2)
+			think(philo, true);
+	}
 }
 
 void ft_usleep(int time, t_data *data)
@@ -56,8 +80,8 @@ void ft_usleep(int time, t_data *data)
 			break ;
 		elapsed = gettime(MICROSECOND) - start;
 		rem = time - elapsed;
-		if(rem > 100)
-			usleep(time / 2);
+		if(rem > 1000)
+			usleep(rem / 2);
 		else
 			{
 				while(gettime(MICROSECOND) - start < time)

@@ -6,15 +6,29 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/11 00:42:05 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 00:54:58 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-static void	think(t_philo *philo)
+void	think(t_philo *philo, bool presim)
 {
-	write_status(THINK, philo, DEBUG);
+	long t_eat;
+	long t_sleep;
+	long t_think;
+
+	if(!presim)
+		write_status(THINK, philo, DEBUG);
+	if(philo->data->philo_nbr % 2 == 0)
+	    return ;
+	t_eat = philo->data->time_to_eat;
+	t_sleep = philo->data->time_to_sleep;
+	t_think = t_eat * 2 + t_sleep;
+	if(t_think < 0)
+		t_think = 0;
+	ft_usleep(t_think * 0.42, philo->data);
+
 }
 
 static void	eat(t_philo *philo)
@@ -64,7 +78,7 @@ void	*start_sim(void *philo)
 		eat(p);
 		write_status(SLEEP, p, DEBUG);
 		ft_usleep(p->data->time_to_sleep, p->data);
-		think(p);
+		think(p, false);
 	}
 	return (NULL);
 }
@@ -92,5 +106,7 @@ void	*routine_start(t_data *data)
 	{
 		protect_thread_handle(&data->philo[i].thread, NULL, NULL, JOIN);
 	}
+	set_bool(&data->data_mtx, &data->end_timestamp, true);
+	protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
 	return (NULL);
 }

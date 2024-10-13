@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:33:29 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 23:27:26 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 00:18:22 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	init_p(t_data *data)
 		philo = data->philo + i;
 		philo->id = i + 1;
 		philo->full = false;
-		// philo->last_eat = 0;
+		philo->last_eat = 0;
 		protect_mutex_handle(&philo->philo_mtx, INIT);
 		philo->eat_count = 0;
 		philo->data = data;
