@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 15:29:03 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 22:33:03 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void					handle_thread_err(int err, t_emutex action);
 
 /************** PARSE ****************/
 
-void					parse_input(t_data *data, char **argv);
+int parse_input(t_data *data, char **argv);
 
 /************** INIT ****************/
 

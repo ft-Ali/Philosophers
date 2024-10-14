@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:40 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 15:34:22 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 22:32:38 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,22 @@ int	main(int argc, char **argv)
 	if (argc == 5 || argc == 6)
 	{
 		data.error_exit = 0;
-		parse_input(&data, argv);
-		if (!data.error_exit)
-		{
-			init_data(&data);
-			// start simulation
-			routine_start(&data);
-			// free data after simulation = philo full or philo has died
-			free_data(&data);
-		}
-		else if(data.error_exit)
-			error_exit("Invalid input");
+
+		// Si la fonction parse_input retourne une erreur, on arrête le programme.
+		if (parse_input(&data, argv) != 0)
+			return (1);
+
+		// Si pas d'erreur, on continue
+		init_data(&data);
+		routine_start(&data);
+		free_data(&data);  // Libère la mémoire après la simulation
 	}
 	else
+	{
 		error_exit("Invalid number of arguments\n"
 					"Usage: ./philo [philo_nbr] [time_to_die] [time_to_eat] [time_to_sleep]");
+		return (1);  // Retourne 1 en cas de mauvais nombre d'arguments
+	}
 
-	return (0);
+	return (0);  // Retourne 0 si tout s'est bien passé
 }
