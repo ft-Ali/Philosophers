@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:40 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 15:51:58 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:34:22 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,18 @@ int	main(int argc, char **argv)
 
 	if (argc == 5 || argc == 6)
 	{
+		data.error_exit = 0;
 		parse_input(&data, argv);
-		// init data && create philos
-		init_data(&data);
-		// start simulation
-		routine_start(&data);
-		// free data after simulation = philo full or philo has died
-		free_data(&data);
+		if (!data.error_exit)
+		{
+			init_data(&data);
+			// start simulation
+			routine_start(&data);
+			// free data after simulation = philo full or philo has died
+			free_data(&data);
+		}
+		else if(data.error_exit)
+			error_exit("Invalid input");
 	}
 	else
 		error_exit("Invalid number of arguments\n"

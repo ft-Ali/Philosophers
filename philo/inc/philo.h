@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 14:52:24 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:29:03 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
 # define DEBUG 1
-
 typedef struct s_data	t_data;
 typedef pthread_mutex_t	t_mtx;
 
@@ -90,6 +89,7 @@ struct					s_data
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
+	int					error_exit;
 	int limit_eat;      // optional [5]
 	int timestamp;      // timestamp when the program started
 	bool end_timestamp; // if philo died or all philo ate

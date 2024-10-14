@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 00:20:38 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 15:33:41 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ const char	*valide_input(const char *str)
 {
 	int			len;
 	const char	*nbr;
+	t_data		data;
 
 	len = 0;
 	while (is_space(*str))
@@ -33,9 +34,13 @@ const char	*valide_input(const char *str)
 	if (*str == '+')
 		++str;
 	else if (*str == '-')
-		error_exit("Negative values are not allowed");
+	{
+		data.error_exit = 1;
+	}
 	if (!is_digit(*str))
-		error_exit("Invalid input");
+	{
+		data.error_exit = 1;
+	}
 	nbr = str;
 	while (is_digit(*str))
 	{
@@ -52,6 +57,7 @@ const char	*valide_input(const char *str)
 static long	ft_atol(const char *str)
 {
 	long	res;
+	t_data 		data;
 
 	res = 0;
 	str = valide_input(str);
@@ -61,7 +67,10 @@ static long	ft_atol(const char *str)
 		++str;
 	}
 	if (res > INT_MAX)
-		error_exit("Number is too big");
+	{
+		data.error_exit = 1;
+		
+	}
 	return (res);
 }
 
