@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 22:34:29 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 22:38:08 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ const char	*valide_input(const char *str)
 static long	ft_atol(const char *str)
 {
 	long	res;
-	// t_data 		data;
 
 	res = 0;
 	str = valide_input(str);
