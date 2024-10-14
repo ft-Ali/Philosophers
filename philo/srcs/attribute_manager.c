@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:30:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/13 22:08:57 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:21:56 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ bool	get_bool(t_mtx *mtx, bool *src)
 	protect_mutex_handle(mtx, UNLOCK);
 	return (ret);
 }
-long get_int(t_mtx *mtx, long *src)
+int get_int(t_mtx *mtx, int *src)
 {
-	long ret;
+	int ret;
 
 	protect_mutex_handle(mtx, LOCK);
 	ret = *src;
@@ -38,7 +38,7 @@ long get_int(t_mtx *mtx, long *src)
 	return (ret);
 }
 
-void	set_int(t_mtx *mtx, long *dest, long value)
+void	set_int(t_mtx *mtx, int *dest, int value)
 {
 	protect_mutex_handle(mtx, LOCK);
 	*dest = value;

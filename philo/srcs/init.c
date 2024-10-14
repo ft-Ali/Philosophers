@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:33:29 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 00:18:22 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:30:10 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ static void	handle_fork(t_philo *philo, t_fork *forks, int i)
 	int	philo_nbr;
 
 	philo_nbr = philo->data->philo_nbr;
-	philo->right_fork = &forks[(i + 1) % philo_nbr];
-	philo->left_fork = &forks[i];
+	if (philo->id % 2 != 0)
+	{
+		philo->right_fork = &forks[(i + 1) % philo_nbr];
+		philo->left_fork = &forks[i];
+	}
 	if (philo->id % 2 == 0)
 	{
 		philo->right_fork = &forks[i];

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 00:54:08 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:55:10 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ long	gettime(t_etime_code code)
 	if (gettimeofday(&tv, NULL))
 		return (error_exit("gettimeofday() failed"));
 	if (SECOND == code)
-		return (tv.tv_sec + (tv.tv_usec / 1e6));
+		return (tv.tv_sec + (tv.tv_usec / 1000000));
 	else if (MILLISECOND == code)
-		return (tv.tv_sec * 1e3 + tv.tv_usec / 1e3);
+		return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 	else if (MICROSECOND == code)
-		return (tv.tv_sec * 1e6 + tv.tv_usec);
-	else 
+		return (tv.tv_sec * 1000000 + tv.tv_usec);
+	else
 		return (error_exit("Invalid time code"));
-	return(42);
+	return (42);
 }
 
 int	error_exit(char *msg)
@@ -36,16 +36,17 @@ int	error_exit(char *msg)
 }
 void	free_data(t_data *data)
 {
-	t_philo *philo;
-	int i;
-	 i = -1;
-	 while(++i < data->philo_nbr)
-	 {
-		 philo = data->philo + i;
-		 protect_mutex_handle(&philo->philo_mtx, DESTROY);
-	 }
-	 protect_mutex_handle(&data->data_mtx, DESTROY);
-	 protect_mutex_handle(&data->print_mtx, DESTROY);
+	t_philo	*philo;
+	int		i;
+
+	i = -1;
+	while (++i < data->philo_nbr)
+	{
+		philo = data->philo + i;
+		protect_mutex_handle(&philo->philo_mtx, DESTROY);
+	}
+	protect_mutex_handle(&data->data_mtx, DESTROY);
+	protect_mutex_handle(&data->print_mtx, DESTROY);
 	if (data->philo)
 		free(data->philo);
 	if (data->forks)
@@ -53,39 +54,39 @@ void	free_data(t_data *data)
 	// Ajoutez d'autres libérations de mémoire si nécessaire
 }
 
-void de_sync(t_philo *philo)
+void	de_sync(t_philo *philo)
 {
-	if(philo->data->philo_nbr % 2 == 0)
+	if (philo->data->philo_nbr % 2 == 0)
 	{
-		if(philo->id % 2 == 0)
+		if (philo->id % 2 == 0)
 			ft_usleep(3e4, philo->data);
 	}
 	else
 	{
-		if(philo->id % 2)
+		if (philo->id % 2)
 			think(philo, true);
 	}
 }
 
-void ft_usleep(int time, t_data *data)
+void	ft_usleep(int time, t_data *data)
 {
-	int start;
-	int elapsed;
-	int rem;
+	long start;
+	long elapsed;
+	long rem;
 
 	start = gettime(MICROSECOND);
-	while(gettime(MICROSECOND) - start < time)
+	while (gettime(MICROSECOND) - start < time)
 	{
 		if (simulation_end(data))
 			break ;
 		elapsed = gettime(MICROSECOND) - start;
 		rem = time - elapsed;
-		if(rem > 1000)
+		if (rem > 10000)
 			usleep(rem / 2);
 		else
-			{
-				while(gettime(MICROSECOND) - start < time)
-					;
-			}
+		{
+			while (gettime(MICROSECOND) - start < time)
+				;
+		}
 	}
 }

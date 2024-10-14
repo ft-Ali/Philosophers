@@ -20,11 +20,11 @@ all:	$(NAME)
 
 $(NAME): $(OBJS)
 	@printf "\r\033[K[philo] \033[0;32mLinking...\033[0m"
-	@$(CC) $(OBJS) -o $(NAME) -lm 
+	@$(CC) $(OBJS) -o $(NAME) -lm -lpthread
 	@printf "\r\033[K[philo] \033[0;32mDone!\033[0m\n"
 
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJS) 
 	@printf "[philo] \033[1;31mCleaned .o!\033[0m\n"
 
 fclean: clean

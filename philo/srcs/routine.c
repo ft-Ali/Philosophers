@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 00:54:58 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:52:05 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,20 @@
 
 void	think(t_philo *philo, bool presim)
 {
-	long t_eat;
-	long t_sleep;
-	long t_think;
+	int	t_eat;
+	int	t_sleep;
+	int	t_think;
 
-	if(!presim)
+	if (!presim)
 		write_status(THINK, philo, DEBUG);
-	if(philo->data->philo_nbr % 2 == 0)
-	    return ;
+	if (philo->data->philo_nbr % 2 == 0)
+		return ;
 	t_eat = philo->data->time_to_eat;
 	t_sleep = philo->data->time_to_sleep;
 	t_think = t_eat * 2 + t_sleep;
-	if(t_think < 0)
+	if (t_think < 0)
 		t_think = 0;
 	ft_usleep(t_think * 0.42, philo->data);
-
 }
 
 static void	eat(t_philo *philo)
@@ -48,20 +47,19 @@ static void	eat(t_philo *philo)
 	protect_mutex_handle(&philo->left_fork->fork, UNLOCK);
 }
 
-void *solo_p(void *data)
+void	*solo_p(void *data)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = (t_philo *)data;
 	wait_trhead(philo->data);
 	set_int(&philo->data->data_mtx, &philo->last_eat, gettime(MILLISECOND));
 	increase_int(&philo->data->data_mtx, &philo->data->thread_count);
 	write_status(FORK_RIGHT, philo, DEBUG);
-	while(!simulation_end(philo->data))
+	while (!simulation_end(philo->data))
 		usleep(200);
 	return (NULL);
 }
-
 
 void	*start_sim(void *philo)
 {
@@ -91,7 +89,8 @@ void	*routine_start(t_data *data)
 	if (data->philo_nbr == 0)
 		return (NULL);
 	else if (data->philo_nbr == 1)
-		protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0], CREATE);
+		protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0],
+			CREATE);
 	else
 	{
 		while (++i < data->philo_nbr)

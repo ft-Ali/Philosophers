@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:46:28 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/10 15:46:42 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:53:56 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	handle_mtx_err(int err, t_emutex action)
 	else if (err && action == INIT)
 		error_exit("Mutex init failed");
 	else if (err && action == DESTROY)
-		error_exit("Mutex destroy failed");
+		error_exit("Mutex Free");
 }
 
 void	protect_mutex_handle(t_mtx *mutex, t_emutex action)
