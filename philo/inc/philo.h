@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 22:33:03 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:58:42 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define RESET "\033[0m"
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
-# define DEBUG 1
+# define DEBUG 0
 typedef struct s_data	t_data;
 typedef pthread_mutex_t	t_mtx;
 
@@ -109,7 +109,7 @@ void					think(t_philo *philo, bool presim);
 void					*protect_malloc(size_t size);
 void					free_data(t_data *data);
 void					wait_trhead(t_data *data);
-long					gettime(t_etime_code code);
+long					gettime(t_etime_code time_unit);
 void					ft_usleep(int time, t_data *data);
 void					write_status(t_estatus status, t_philo *philo,
 							bool debug);

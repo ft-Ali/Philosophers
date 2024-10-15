@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:49:45 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 15:04:35 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:09:39 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,29 +58,32 @@ static void write_status_debug(t_estatus status, t_philo *philo, long elapsed)
 
 void	write_status(t_estatus status, t_philo *philo, bool debug)
 {
-	long elapsed;
+    int elapsed;
 
-	elapsed = gettime(MILLISECOND);
-	// printf("elapsed: %d\n", elapsed);
-	if(philo->full)
-		return ;
-	if (debug)
-		write_status_debug(status, philo, elapsed);
-	else
-	{
-		protect_mutex_handle(&philo->data->print_mtx, LOCK);
-		if ((status == FORK_RIGHT || status == FORK_LEFT)
-			&& !simulation_end(philo->data))
-			printf(GREY "%ld" RESET " %d has taken a fork\n", elapsed,
-				philo->id);
-		else if (status == EAT && !simulation_end(philo->data))
-			printf(GREEN "%ld" RESET " %d is eating\n", elapsed, philo->id);
-		else if (status == SLEEP && !simulation_end(philo->data))
-			printf(CYAN "%ld" RESET " %d is sleeping\n", elapsed, philo->id);
-		else if (status == THINK && !simulation_end(philo->data))
-			printf(YELLOW "%ld" RESET " %d is thinking\n", elapsed, philo->id);
-		else if (status == DIED && simulation_end(philo->data))
-			error_exit("A philosopher died");
-	}
-		protect_mutex_handle(&philo->data->print_mtx, UNLOCK);
+    elapsed = gettime(MILLISECOND) - philo->data->timestamp;
+    // printf("elapsed: %d\n", elapsed);
+    if(philo->full)
+        return ;
+    if (debug)
+        write_status_debug(status, philo, elapsed);
+    else
+    {
+        protect_mutex_handle(&philo->data->print_mtx, LOCK);
+        if ((status == FORK_RIGHT || status == FORK_LEFT)
+            && !simulation_end(philo->data))
+            printf(GREY "%dms" RESET " %d has taken a fork\n", elapsed,
+                philo->id);
+        else if (status == EAT && !simulation_end(philo->data))
+            printf(GREEN "%dms" RESET " %d is eating\n", elapsed, philo->id);
+        else if (status == SLEEP && !simulation_end(philo->data))
+            printf(CYAN "%dms" RESET " %d is sleeping\n", elapsed, philo->id);
+        else if (status == THINK && !simulation_end(philo->data))
+            printf(YELLOW "%dms" RESET " %d is thinking 🤔\n", elapsed, philo->id);
+        else if (status == DIED && simulation_end(philo->data))
+            {
+				printf(RED "%dms" RESET " %d died\n", elapsed, philo->id);	
+				error_exit("A philosopher died");
+			}
+        protect_mutex_handle(&philo->data->print_mtx, UNLOCK);
+    }
 }
