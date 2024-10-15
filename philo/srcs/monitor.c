@@ -15,18 +15,16 @@
 
 #include "../inc/philo.h"
 
-
 static bool	philo_died(t_philo *philo)
 {
-	int time;
-	int t_die;
+	int	time;
+	int	t_die;
 
 	if (get_bool(&philo->data->data_mtx, &philo->full))
 		return (false);
 	time = gettime(MILLISECOND) - get_int(&philo->data->data_mtx,
 			&philo->last_eat);
 	t_die = philo->data->time_to_die / 1e3;
-
 	if (time > t_die)
 		return (true);
 	return (false);
@@ -34,8 +32,8 @@ static bool	philo_died(t_philo *philo)
 
 void	*monitor(void *data)
 {
-	t_data *d;
-	int i;
+	t_data	*d;
+	int		i;
 
 	d = (t_data *)data;
 	while (!all_threads_ready(&d->data_mtx, &d->thread_count, d->philo_nbr))
@@ -51,8 +49,6 @@ void	*monitor(void *data)
 				write_status(DIED, d->philo + i, DEBUG);
 			}
 		}
-		// usleep(1000);
 	}
-
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/15 10:59:06 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:39:34 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	error_exit(char *msg)
 	printf(RED "🚨 %s 🚨\n" RESET, msg);
 	return (1);
 }
+
 void	free_data(t_data *data)
 {
 	t_philo	*philo;
@@ -51,7 +52,6 @@ void	free_data(t_data *data)
 		free(data->philo);
 	if (data->forks)
 		free(data->forks);
-	// Ajoutez d'autres libérations de mémoire si nécessaire
 }
 
 void	de_sync(t_philo *philo)
@@ -70,9 +70,9 @@ void	de_sync(t_philo *philo)
 
 void	ft_usleep(int time, t_data *data)
 {
-	long start;
-	long elapsed;
-	long rem;
+	long	start;
+	long	elapsed;
+	long	rem;
 
 	start = gettime(MICROSECOND);
 	while (gettime(MICROSECOND) - start < time)

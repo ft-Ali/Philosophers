@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:40 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 22:32:38 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:18:44 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 	{
 		error_exit("Invalid number of arguments\n"
 					"Usage: ./philo [philo_nbr] [time_to_die] [time_to_eat] [time_to_sleep]");
-		return (1);  // Retourne 1 en cas de mauvais nombre d'arguments
+		return (1);
 	}
 
 	return (0);  // Retourne 0 si tout s'est bien passé

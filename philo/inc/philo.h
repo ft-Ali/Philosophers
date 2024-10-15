@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/15 10:58:42 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:42:03 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define YELLOW "\033[0;33m"
 # define PURPLE "\033[0;35m"
 # define DEBUG 0
+
 typedef struct s_data	t_data;
 typedef pthread_mutex_t	t_mtx;
 
@@ -73,9 +74,9 @@ typedef struct s_philo
 	t_fork				*right_fork;
 	int					eat_count;
 	bool				full;
-	int last_eat; // last time the philo ate
+	int					last_eat;
 	t_mtx				philo_mtx;
-	pthread_t thread; // thread of the philo
+	pthread_t			thread;
 	t_data				*data;
 }						t_philo;
 
@@ -90,14 +91,14 @@ struct					s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					error_exit;
-	int limit_eat;      // optional [5]
-	int timestamp;      // timestamp when the program started
-	bool end_timestamp; // if philo died or all philo ate
-	bool thread_ready;  // if all threads are ready
-	t_mtx data_mtx;     // avoid data race
-	int thread_count;   // count of threads
-	pthread_t monitor;  // monitor thread
-	t_mtx print_mtx;    // print mutex
+	int					limit_eat;
+	int					timestamp;
+	bool				end_timestamp;
+	bool				thread_ready;
+	t_mtx				data_mtx;
+	int					thread_count;
+	pthread_t			monitor;
+	t_mtx				print_mtx;
 	t_fork				*forks;
 	t_philo				*philo;
 };
@@ -121,6 +122,9 @@ bool					all_threads_ready(t_mtx *mtx, int *threads,
 void					*solo_p(void *data);
 void					*monitor(void *data);
 int						get_int(t_mtx *mtx, int *src);
+void					write_status_debug(t_estatus status, t_philo *philo,
+							int elapsed);
+
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
@@ -131,7 +135,7 @@ void					handle_thread_err(int err, t_emutex action);
 
 /************** PARSE ****************/
 
-int parse_input(t_data *data, char **argv);
+int						parse_input(t_data *data, char **argv);
 
 /************** INIT ****************/
 
