@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:46:28 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 14:53:56 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:07:59 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*protect_malloc(size_t size)
 
 	ptr = malloc(size);
 	if (!ptr)
-		error_exit("Malloc failed");
+		return (NULL);
 	return (ptr);
 }
 
@@ -62,15 +62,23 @@ void	handle_thread_err(int err, t_emutex action)
 		error_exit("Thread detach failed");
 }
 
-void	protect_thread_handle(pthread_t *thread, void *(*foo)(void *),
-		void *data, t_emutex action)
+int	protect_thread_handle(pthread_t *thread, void *(*start_routine)(void *),
+		void *arg, int action)
 {
+	int	result;
+
+	result = -1;
 	if (action == CREATE)
-		handle_thread_err(pthread_create(thread, NULL, foo, data), action);
+	{
+		result = pthread_create(thread, NULL, start_routine, arg);
+		if (result != 0)
+			return (result);
+	}
 	else if (action == JOIN)
-		handle_thread_err(pthread_join(*thread, NULL), action);
-	else if (action == DETACH)
-		handle_thread_err(pthread_detach(*thread), action);
-	else
-		error_exit("Invalid thread action");
+	{
+		result = pthread_join(*thread, NULL);
+		if (result != 0)
+			return (result);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/15 11:39:34 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:30:13 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ int	error_exit(char *msg)
 
 void	free_data(t_data *data)
 {
-	t_philo	*philo;
-	int		i;
+	int	i;
 
 	i = -1;
+	if (!data || !data->philo)
+		return ;
 	while (++i < data->philo_nbr)
 	{
-		philo = data->philo + i;
-		protect_mutex_handle(&philo->philo_mtx, DESTROY);
+		protect_mutex_handle(&data->philo[i].philo_mtx, DESTROY);
 	}
 	protect_mutex_handle(&data->data_mtx, DESTROY);
 	protect_mutex_handle(&data->print_mtx, DESTROY);

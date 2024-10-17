@@ -6,11 +6,23 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 14:52:05 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:36:57 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
+
+/**
+ * @brief Permet à un philosophe de réfléchir pendant un temps donné.
+ *
+ * Si le paramètre presim est faux, le philosophe écrit son statut
+ * dans le journal. Si le nombre de philosophes est pair, il sort
+ * immédiatement sans penser. Sinon, il calcule le temps de réflexion
+ * et dort un temps proportionnel à ce temps.
+ *
+ * @param philo Pointeur vers la structure du philosophe.
+ * @param presim Indique si la simulation est en cours.
+ */
 
 void	think(t_philo *philo, bool presim)
 {
@@ -46,6 +58,15 @@ static void	eat(t_philo *philo)
 	protect_mutex_handle(&philo->right_fork->fork, UNLOCK);
 	protect_mutex_handle(&philo->left_fork->fork, UNLOCK);
 }
+/**
+ * @brief Routine pour un philosophe solitaire.
+ *
+ * Ce philosophe attend que la simulation commence, mange une fois,
+ * puis attend que la simulation se termine.
+ *
+ * @param data Pointeur vers les données du philosophe.
+ * @return NULL
+ */
 
 void	*solo_p(void *data)
 {
@@ -60,6 +81,17 @@ void	*solo_p(void *data)
 		usleep(200);
 	return (NULL);
 }
+
+/**
+ * @brief Fonction principale de la simulation pour chaque philosophe.
+ *
+ * Chaque philosophe attend le début de la simulation, mange,
+ * dort, puis pense. Cela continue jusqu'à ce que la simulation
+ * prenne fin ou que le philosophe soit plein.
+ *
+ * @param philo Pointeur vers la structure du philosophe.
+ * @return NULL
+ */
 
 void	*start_sim(void *philo)
 {
@@ -81,31 +113,120 @@ void	*start_sim(void *philo)
 	return (NULL);
 }
 
-void	*routine_start(t_data *data)
+/**
+ * @brief Démarre les threads de la simulation pour les philosophes.
+ *
+ * Crée les threads pour chaque philosophe et pour le moniteur.
+ * Attend que tous les threads se terminent avant de sortir.
+ *
+ * @param data Pointeur vers les données de la simulation.
+ * @return NULL
+ */
+
+// int	create_threads(t_data *data)
+// {
+// 	int	i;
+// 	int	result;
+
+// 	i = -1;
+// 	if (data->philo_nbr == 1)
+// 	{
+// 		result = protect_thread_handle(&data->philo[0].thread, solo_p,
+// 				&data->philo[0], CREATE);
+// 		if (result != 0)
+// 			return (result);
+// 	}
+// 	else
+// 	{
+// 		while (++i < data->philo_nbr)
+// 		{
+// 			result = protect_thread_handle(&data->philo[i].thread, start_sim,
+// 					&data->philo[i], CREATE);
+// 			if (result != 0)
+// 				return (result);
+// 		}
+// 	}
+// 	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
+// 	return (result);
+// }
+
+// int	join_threads(t_data *data)
+// {
+// 	int	i;
+// 	int	result;
+
+// 	i = -1;
+// 	while (++i < data->philo_nbr)
+// 	{
+// 		result = protect_thread_handle(&data->philo[i].thread, NULL, NULL,
+// 				JOIN);
+// 		if (result != 0)
+// 			return (result);
+// 	}
+// 	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
+// 	return (result);
+// }
+
+// int	routine_start(t_data *data)
+// {
+// 	int	result;
+
+// 	if (data->philo_nbr <= 0)
+// 		return (1);
+// 	result = create_threads(data);
+// 	if (result != 0)
+// 		return (result);
+// 	data->timestamp = gettime(MILLISECOND);
+// 	set_bool(&data->data_mtx, &data->thread_ready, true);
+// 	result = join_threads(data);
+// 	if (result != 0)
+// 		return (result);
+// 	set_bool(&data->data_mtx, &data->end_timestamp, true);
+// 	return (0);
+// }
+
+int	routine_start(t_data *data)
 {
 	int	i;
+	int	result;
 
 	i = -1;
-	if (data->philo_nbr == 0)
-		return (NULL);
-	else if (data->philo_nbr == 1)
-		protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0],
-			CREATE);
+	if (data->philo_nbr <= 0)
+		return (1);
+	if (data->philo_nbr == 1)
+	{
+		result = protect_thread_handle(&data->philo[0].thread, solo_p,
+				&data->philo[0], CREATE);
+		if (result != 0)
+			return (result);
+	}
 	else
 	{
 		while (++i < data->philo_nbr)
-			protect_thread_handle(&data->philo[i].thread, start_sim,
-				&data->philo[i], CREATE);
+		{
+			result = protect_thread_handle(&data->philo[i].thread, start_sim,
+					&data->philo[i], CREATE);
+			if (result != 0)
+				return (result);
+		}
 	}
-	protect_thread_handle(&data->monitor, monitor, data, CREATE);
+	// Lancer le thread de monitor
+	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
+	if (result != 0)
+		return (result);
 	data->timestamp = gettime(MILLISECOND);
 	set_bool(&data->data_mtx, &data->thread_ready, true);
 	i = -1;
 	while (++i < data->philo_nbr)
 	{
-		protect_thread_handle(&data->philo[i].thread, NULL, NULL, JOIN);
+		result = protect_thread_handle(&data->philo[i].thread, NULL, NULL,
+				JOIN);
+		if (result != 0)
+			return (result);
 	}
 	set_bool(&data->data_mtx, &data->end_timestamp, true);
-	protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
-	return (NULL);
+	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
+	if (result != 0)
+		return (result);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/15 11:42:03 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:36:18 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,9 @@ void					write_status_debug(t_estatus status, t_philo *philo,
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
 void					*protect_malloc(size_t size);
-void					protect_thread_handle(pthread_t *thread,
-							void *(*foo)(void *), void *data, t_emutex action);
+int						protect_thread_handle(pthread_t *thread,
+							void *(*start_routine)(void *), void *arg,
+							int action);
 void					handle_thread_err(int err, t_emutex action);
 
 /************** PARSE ****************/
@@ -139,13 +140,20 @@ int						parse_input(t_data *data, char **argv);
 
 /************** INIT ****************/
 
-void					init_data(t_data *data);
+int						init_data(t_data *data);
 
 /**************** ATTRIBUT MANAGER *************/
 
 void					set_bool(t_mtx *mtx, bool *dest, bool value);
 bool					get_bool(t_mtx *mtx, bool *src);
 bool					simulation_end(t_data *data);
-void					*routine_start(t_data *data);
+int						routine_start(t_data *data);
+const char				*validate_number(const char *str);
+const char				*validate_prefix(const char **str);
+const char				*valide_input(const char *str);
+bool					is_space(char c);
+bool					is_digit(char c);
+int						create_threads(t_data *data);
+int						join_threads(t_data *data);
 
 #endif

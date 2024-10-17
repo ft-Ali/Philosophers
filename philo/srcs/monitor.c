@@ -15,6 +15,24 @@
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Vérifie si un philosophe est mort en comparant le temps écoulé
+ * depuis son dernier repas avec le temps limite avant la mort.
+ *
+ * Cette fonction détermine si le philosophe est mort en vérifiant si
+ * le temps écoulé depuis son dernier repas dépasse le temps limite
+ * défini par `time_to_die`. Elle commence par vérifier si le philosophe
+ * est déjà rassasié et retourne faux si c'est le cas. Si le
+ * philosophe a mangé, elle calcule le temps écoulé depuis son dernier
+ * repas et compare ce temps avec `time_to_die`. Si le temps écoulé
+ * est supérieur à `time_to_die`, la fonction retourne vrai, indiquant
+ * que le philosophe est considéré comme mort.
+ *
+ *
+ * @param philo Pointeur vers la structure du philosophe à vérifier.
+ * @return true si le philosophe est mort, false sinon.
+ */
+
 static bool	philo_died(t_philo *philo)
 {
 	int	time;
@@ -29,6 +47,16 @@ static bool	philo_died(t_philo *philo)
 		return (true);
 	return (false);
 }
+/**
+ * @brief Fonction du thread de surveillance des philosophes.
+ *
+ * Cette fonction surveille en continu l'état des philosophes et
+ * détermine si l'un d'eux est mort. Si un philosophe meurt, cela
+ * met fin à la simulation et enregistre l'événement.
+ *
+ * @param data Pointeur vers la structure de données de la simulation.
+ * @return NULL.
+ */
 
 void	*monitor(void *data)
 {

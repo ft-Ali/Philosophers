@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:33:29 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/14 14:30:10 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:27:25 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,33 @@ static void	init_p(t_data *data)
 	}
 }
 
-void	init_data(t_data *data)
+int	check_allocation(t_data *data)
+{
+	if (data->philo == NULL || data->forks == NULL)
+	{
+		if (data->philo != NULL)
+			free(data->philo);
+		if (data->forks != NULL)
+			free(data->forks);
+		protect_mutex_handle(&data->data_mtx, DESTROY);
+		protect_mutex_handle(&data->print_mtx, DESTROY);
+		error_exit("Memory allocation failed");
+		return (1);
+	}
+	return (0);
+}
+/**
+ * @brief Initialise les données du programme.
+ *
+ * Cette fonction initialise les structures et mutex nécessaires au
+ * déroulement de la simulation. Elle alloue la mémoire pour les
+ * philosophes et les fourchettes, puis initialise les mutex.
+ *
+ * @param data Pointeur vers la structure t_data contenant les
+ * informations du programme.
+ */
+
+int	init_data(t_data *data)
 {
 	int	i;
 
@@ -60,10 +86,13 @@ void	init_data(t_data *data)
 	protect_mutex_handle(&data->print_mtx, INIT);
 	data->philo = protect_malloc(sizeof(t_philo) * data->philo_nbr);
 	data->forks = protect_malloc(sizeof(t_fork) * data->philo_nbr);
+	if (check_allocation(data) != 0)
+		return (1);
 	while (++i < data->philo_nbr)
 	{
 		protect_mutex_handle(&data->forks[i].fork, INIT);
 		data->forks[i].fork_id = i;
 	}
 	init_p(data);
+	return (0);
 }
