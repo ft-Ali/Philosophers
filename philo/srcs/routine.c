@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/17 17:36:57 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 00:02:34 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,78 @@ void	*start_sim(void *philo)
  * @return NULL
  */
 
-// int	create_threads(t_data *data)
+int	create_threads(t_data *data)
+{
+	int	i;
+	int	result;
+
+	if (data->philo_nbr == 1)
+	{
+		result = protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0], CREATE);
+		if (result != 0)
+			return (result);
+	}
+	else
+	{
+		i = -1;
+		while (++i < data->philo_nbr)
+		{
+			result = protect_thread_handle(&data->philo[i].thread, start_sim, &data->philo[i], CREATE);
+			if (result != 0)
+				return (result);
+		}
+	}
+	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
+	if (result != 0)
+		return (result);
+	data->timestamp = gettime(MILLISECOND);
+	set_bool(&data->data_mtx, &data->thread_ready, true);
+	return (0);
+}
+
+int	join_threads(t_data *data)
+{
+	int	i;
+	int	result;
+
+	i = -1;
+	while (++i < data->philo_nbr)
+	{
+		result = protect_thread_handle(&data->philo[i].thread, NULL, NULL, JOIN);
+		if (result != 0)
+			return (result);
+	}
+	set_bool(&data->data_mtx, &data->end_timestamp, true);
+	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
+	if (result != 0)
+		return (result);
+
+	return (0);
+}
+
+int	routine_start(t_data *data)
+{
+	int	result;
+
+	if (data->philo_nbr <= 0)
+		return (1);
+	result = create_threads(data);
+	if (result != 0)
+		return (result);
+	result = join_threads(data);
+	if (result != 0)
+		return (result);
+	return (0);
+}
+
+// int	routine_start(t_data *data)
 // {
 // 	int	i;
 // 	int	result;
 
 // 	i = -1;
+// 	if (data->philo_nbr <= 0)
+// 		return (1);
 // 	if (data->philo_nbr == 1)
 // 	{
 // 		result = protect_thread_handle(&data->philo[0].thread, solo_p,
@@ -146,15 +212,12 @@ void	*start_sim(void *philo)
 // 				return (result);
 // 		}
 // 	}
+// 	// Lancer le thread de monitor
 // 	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
-// 	return (result);
-// }
-
-// int	join_threads(t_data *data)
-// {
-// 	int	i;
-// 	int	result;
-
+// 	if (result != 0)
+// 		return (result);
+// 	data->timestamp = gettime(MILLISECOND);
+// 	set_bool(&data->data_mtx, &data->thread_ready, true);
 // 	i = -1;
 // 	while (++i < data->philo_nbr)
 // 	{
@@ -163,70 +226,9 @@ void	*start_sim(void *philo)
 // 		if (result != 0)
 // 			return (result);
 // 	}
-// 	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
-// 	return (result);
-// }
-
-// int	routine_start(t_data *data)
-// {
-// 	int	result;
-
-// 	if (data->philo_nbr <= 0)
-// 		return (1);
-// 	result = create_threads(data);
-// 	if (result != 0)
-// 		return (result);
-// 	data->timestamp = gettime(MILLISECOND);
-// 	set_bool(&data->data_mtx, &data->thread_ready, true);
-// 	result = join_threads(data);
-// 	if (result != 0)
-// 		return (result);
 // 	set_bool(&data->data_mtx, &data->end_timestamp, true);
+// 	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
+// 	if (result != 0)
+// 		return (result);
 // 	return (0);
 // }
-
-int	routine_start(t_data *data)
-{
-	int	i;
-	int	result;
-
-	i = -1;
-	if (data->philo_nbr <= 0)
-		return (1);
-	if (data->philo_nbr == 1)
-	{
-		result = protect_thread_handle(&data->philo[0].thread, solo_p,
-				&data->philo[0], CREATE);
-		if (result != 0)
-			return (result);
-	}
-	else
-	{
-		while (++i < data->philo_nbr)
-		{
-			result = protect_thread_handle(&data->philo[i].thread, start_sim,
-					&data->philo[i], CREATE);
-			if (result != 0)
-				return (result);
-		}
-	}
-	// Lancer le thread de monitor
-	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
-	if (result != 0)
-		return (result);
-	data->timestamp = gettime(MILLISECOND);
-	set_bool(&data->data_mtx, &data->thread_ready, true);
-	i = -1;
-	while (++i < data->philo_nbr)
-	{
-		result = protect_thread_handle(&data->philo[i].thread, NULL, NULL,
-				JOIN);
-		if (result != 0)
-			return (result);
-	}
-	set_bool(&data->data_mtx, &data->end_timestamp, true);
-	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
-	if (result != 0)
-		return (result);
-	return (0);
-}
