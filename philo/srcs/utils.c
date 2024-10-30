@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:52:02 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/17 17:30:13 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:47:10 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,6 @@ void	free_data(t_data *data)
 		free(data->philo);
 	if (data->forks)
 		free(data->forks);
-}
-
-void	de_sync(t_philo *philo)
-{
-	if (philo->data->philo_nbr % 2 == 0)
-	{
-		if (philo->id % 2 == 0)
-			ft_usleep(3e4, philo->data);
-	}
-	else
-	{
-		if (philo->id % 2)
-			think(philo, true);
-	}
 }
 
 void	ft_usleep(int time, t_data *data)

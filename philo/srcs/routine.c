@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 14:34:33 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/18 00:02:34 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:20:47 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	think(t_philo *philo, bool presim)
 	ft_usleep(t_think * 0.42, philo->data);
 }
 
-static void	eat(t_philo *philo)
+void	eat(t_philo *philo)
 {
 	protect_mutex_handle(&philo->right_fork->fork, LOCK);
 	write_status(FORK_RIGHT, philo, DEBUG);
@@ -58,60 +58,6 @@ static void	eat(t_philo *philo)
 	protect_mutex_handle(&philo->right_fork->fork, UNLOCK);
 	protect_mutex_handle(&philo->left_fork->fork, UNLOCK);
 }
-/**
- * @brief Routine pour un philosophe solitaire.
- *
- * Ce philosophe attend que la simulation commence, mange une fois,
- * puis attend que la simulation se termine.
- *
- * @param data Pointeur vers les données du philosophe.
- * @return NULL
- */
-
-void	*solo_p(void *data)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)data;
-	wait_trhead(philo->data);
-	set_int(&philo->data->data_mtx, &philo->last_eat, gettime(MILLISECOND));
-	increase_int(&philo->data->data_mtx, &philo->data->thread_count);
-	write_status(FORK_RIGHT, philo, DEBUG);
-	while (!simulation_end(philo->data))
-		usleep(200);
-	return (NULL);
-}
-
-/**
- * @brief Fonction principale de la simulation pour chaque philosophe.
- *
- * Chaque philosophe attend le début de la simulation, mange,
- * dort, puis pense. Cela continue jusqu'à ce que la simulation
- * prenne fin ou que le philosophe soit plein.
- *
- * @param philo Pointeur vers la structure du philosophe.
- * @return NULL
- */
-
-void	*start_sim(void *philo)
-{
-	t_philo	*p;
-
-	p = (t_philo *)philo;
-	wait_trhead(p->data);
-	set_int(&p->philo_mtx, &p->last_eat, gettime(MILLISECOND));
-	increase_int(&p->data->data_mtx, &p->data->thread_count);
-	while (!simulation_end(p->data))
-	{
-		if (p->full)
-			break ;
-		eat(p);
-		write_status(SLEEP, p, DEBUG);
-		ft_usleep(p->data->time_to_sleep, p->data);
-		think(p, false);
-	}
-	return (NULL);
-}
 
 /**
  * @brief Démarre les threads de la simulation pour les philosophes.
@@ -123,32 +69,32 @@ void	*start_sim(void *philo)
  * @return NULL
  */
 
-int	create_threads(t_data *data)
+int	create_threads(t_data *d)
 {
 	int	i;
-	int	result;
+	int	re;
 
-	if (data->philo_nbr == 1)
+	if (d->philo_nbr == 1)
 	{
-		result = protect_thread_handle(&data->philo[0].thread, solo_p, &data->philo[0], CREATE);
-		if (result != 0)
-			return (result);
+		re = t_handle(&d->philo[0].thread, solo_p, &d->philo[0], CREATE);
+		if (re != 0)
+			return (re);
 	}
 	else
 	{
 		i = -1;
-		while (++i < data->philo_nbr)
+		while (++i < d->philo_nbr)
 		{
-			result = protect_thread_handle(&data->philo[i].thread, start_sim, &data->philo[i], CREATE);
-			if (result != 0)
-				return (result);
+			re = t_handle(&d->philo[i].thread, start_sim, &d->philo[i], CREATE);
+			if (re != 0)
+				return (re);
 		}
 	}
-	result = protect_thread_handle(&data->monitor, monitor, data, CREATE);
-	if (result != 0)
-		return (result);
-	data->timestamp = gettime(MILLISECOND);
-	set_bool(&data->data_mtx, &data->thread_ready, true);
+	re = t_handle(&d->monitor, monitor, d, CREATE);
+	if (re != 0)
+		return (re);
+	d->timestamp = gettime(MILLISECOND);
+	set_bool(&d->data_mtx, &d->thread_ready, true);
 	return (0);
 }
 
@@ -160,15 +106,15 @@ int	join_threads(t_data *data)
 	i = -1;
 	while (++i < data->philo_nbr)
 	{
-		result = protect_thread_handle(&data->philo[i].thread, NULL, NULL, JOIN);
+		result = t_handle(&data->philo[i].thread, NULL, NULL,
+				JOIN);
 		if (result != 0)
 			return (result);
 	}
 	set_bool(&data->data_mtx, &data->end_timestamp, true);
-	result = protect_thread_handle(&data->monitor, NULL, NULL, JOIN);
+	result = t_handle(&data->monitor, NULL, NULL, JOIN);
 	if (result != 0)
 		return (result);
-
 	return (0);
 }
 

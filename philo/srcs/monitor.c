@@ -16,6 +16,61 @@
 #include "../inc/philo.h"
 
 /**
+ * @brief Routine pour un philosophe solitaire.
+ *
+ * Ce philosophe attend que la simulation commence, mange une fois,
+ * puis attend que la simulation se termine.
+ *
+ * @param data Pointeur vers les données du philosophe.
+ * @return NULL
+ */
+
+void	*solo_p(void *data)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)data;
+	wait_trhead(philo->data);
+	set_int(&philo->data->data_mtx, &philo->last_eat, gettime(MILLISECOND));
+	increase_int(&philo->data->data_mtx, &philo->data->thread_count);
+	write_status(FORK_RIGHT, philo, DEBUG);
+	while (!simulation_end(philo->data))
+		usleep(200);
+	return (NULL);
+}
+
+/**
+ * @brief Fonction principale de la simulation pour chaque philosophe.
+ *
+ * Chaque philosophe attend le début de la simulation, mange,
+ * dort, puis pense. Cela continue jusqu'à ce que la simulation
+ * prenne fin ou que le philosophe soit plein.
+ *
+ * @param philo Pointeur vers la structure du philosophe.
+ * @return NULL
+ */
+
+void	*start_sim(void *philo)
+{
+	t_philo	*p;
+
+	p = (t_philo *)philo;
+	wait_trhead(p->data);
+	set_int(&p->philo_mtx, &p->last_eat, gettime(MILLISECOND));
+	increase_int(&p->data->data_mtx, &p->data->thread_count);
+	while (!simulation_end(p->data))
+	{
+		if (p->full)
+			break ;
+		eat(p);
+		write_status(SLEEP, p, DEBUG);
+		ft_usleep(p->data->time_to_sleep, p->data);
+		think(p, false);
+	}
+	return (NULL);
+}
+
+/**
  * @brief Vérifie si un philosophe est mort en comparant le temps écoulé
  * depuis son dernier repas avec le temps limite avant la mort.
  *

@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 14:22:58 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/17 17:36:18 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:20:59 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ struct					s_data
 	int					time_to_sleep;
 	int					error_exit;
 	int					limit_eat;
-	int					timestamp;
+	long				timestamp;
 	bool				end_timestamp;
 	bool				thread_ready;
 	t_mtx				data_mtx;
@@ -123,13 +123,13 @@ void					*solo_p(void *data);
 void					*monitor(void *data);
 int						get_int(t_mtx *mtx, int *src);
 void					write_status_debug(t_estatus status, t_philo *philo,
-							int elapsed);
+							long elapsed);
 
 /************** PROCTECTED ****************/
 
 void					protect_mutex_handle(t_mtx *mutex, t_emutex action);
 void					*protect_malloc(size_t size);
-int						protect_thread_handle(pthread_t *thread,
+int						t_handle(pthread_t *thread,
 							void *(*start_routine)(void *), void *arg,
 							int action);
 void					handle_thread_err(int err, t_emutex action);
@@ -155,5 +155,6 @@ bool					is_space(char c);
 bool					is_digit(char c);
 int						create_threads(t_data *data);
 int						join_threads(t_data *data);
+void					eat(t_philo *philo);
 
 #endif

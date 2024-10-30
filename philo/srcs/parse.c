@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:51:51 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/17 16:21:29 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:05:28 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,11 @@ int	parse_input(t_data *data, char **argv)
 		|| data->time_to_sleep < 60000)
 		return (error_exit("Use timestamps more than 60ms"));
 	if (argv[5])
+	{
 		data->limit_eat = ft_atol(argv[5]);
+		if (data->limit_eat == -1)
+			return (error_exit("Invalid input values"));
+	}
 	else
 		data->limit_eat = -1;
 	return (0);

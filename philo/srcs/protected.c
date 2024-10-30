@@ -6,7 +6,7 @@
 /*   By: alsiavos <alsiavos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:46:28 by alsiavos          #+#    #+#             */
-/*   Updated: 2024/10/17 17:07:59 by alsiavos         ###   ########.fr       */
+/*   Updated: 2024/10/18 13:18:31 by alsiavos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	handle_thread_err(int err, t_emutex action)
 		error_exit("Thread detach failed");
 }
 
-int	protect_thread_handle(pthread_t *thread, void *(*start_routine)(void *),
+int	t_handle(pthread_t *thread, void *(*start_routine)(void *),
 		void *arg, int action)
 {
 	int	result;
